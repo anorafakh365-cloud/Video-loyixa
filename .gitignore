@@ -2,3 +2,5 @@ out/_*
 out/still_*
 out/render.log
 __pycache__/
+out/AZDIF_reklama_UHD_9x16*.mp4
+out/*_s.mp4
