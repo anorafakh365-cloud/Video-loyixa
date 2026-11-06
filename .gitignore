@@ -1,0 +1,4 @@
+out/_*
+out/still_*
+out/render.log
+__pycache__/
