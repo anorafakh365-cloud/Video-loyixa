@@ -64,12 +64,19 @@ def frame(i):
 def render_chunk(args):
     ci, f0, f1 = args
     path = os.path.join(OUT, f'_v2chunk{ci:03d}.mp4')
+    if os.path.exists(path):   # qayta ishga tushirilganda tayyor bo'laklarni o'tkazib yuborish
+        r = subprocess.run(['ffprobe', '-v', 'error', '-count_frames', '-select_streams', 'v:0', '-show_entries',
+                            'stream=nb_read_frames', '-of', 'csv=p=0', path], capture_output=True, text=True)
+        if r.stdout.strip() == str(f1 - f0):
+            return path
+    tmp = path + '.tmp.mp4'
     cmd = ['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-s', f'{W}x{H}', '-r', str(FPS),
-           '-i', '-', '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-pix_fmt', 'yuv420p', path]
+           '-i', '-', '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-pix_fmt', 'yuv420p', tmp]
     p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     for i in range(f0, f1):
         p.stdin.write(frame(i).tobytes())
     p.stdin.close(); p.wait()
+    os.replace(tmp, path)
     print(f'bo\'lak {ci} tayyor ({f0}-{f1})', flush=True)
     return path
 
