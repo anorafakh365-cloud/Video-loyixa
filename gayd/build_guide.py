@@ -57,6 +57,14 @@ if DAY != 1:
 PLATE_LABEL, PLATE = 'Nonushta namunasi', ('pomidor, bodring, brokkoli, salat', 'tuxum, baliq, go‘sht, kefir', 'donli non, grechka')
 if DAY != 1:
     PLATE_LABEL = getattr(_d, 'PLATE_LABEL', 'Taom namunasi'); PLATE = getattr(_d, 'PLATE', PLATE)
+# mijoz ma'lumotlari (faqat berilgan kunlar uchun)
+import json
+_cf = os.path.join(HERE, 'mijozlar.json')   # shaxsiy ma'lumot — gitga yuklanmaydi
+CLIENTS = {int(k): v for k, v in json.load(open(_cf)).items()} if os.path.exists(_cf) else {}
+_cl = CLIENTS.get(DAY)
+META_EXTRA = (f"<div><span>Mijoz</span><b>{_cl['name']}</b><em>{_cl['born']}</em></div>"
+              f"<div><span>Sana</span><b>{_cl['date']}</b></div>") if _cl else ''
+META_COLS = '1.6fr 1fr 1fr' if _cl else '1fr'
 TOT = dict(kcal=sum(m['kcal'] for m in MEALS), p=sum(m['p'] for m in MEALS), f=sum(m['f'] for m in MEALS), c=sum(m['c'] for m in MEALS))
 
 def page_cover():
@@ -71,7 +79,7 @@ def page_cover():
       <h1>Ovqatlanish<br>rejasi</h1>
       <div class="daybig">{DAY}-kun</div>
     </div>
-    <div class="cover-meta">
+    <div class="cover-meta" style="grid-template-columns:{META_COLS}">{META_EXTRA}
       <div><span>Kunlik me’yor</span><b>≈ {TOT['kcal']:,} kkal</b></div>
     </div>
   </div>
@@ -167,6 +175,7 @@ h1{{font-family:Disp;font-weight:800;font-size:54pt;line-height:.98;margin-top:4
 .cover-meta span{{display:block;font-size:8pt;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.7);font-weight:700}}
 .cover-meta i{{display:block;height:7mm;border-bottom:1px solid rgba(255,255,255,.6)}}
 .cover-meta b{{display:block;margin-top:1.5mm;font-family:Disp;font-weight:600;font-size:15pt}}
+.cover-meta em{{display:block;font-style:normal;font-size:9pt;font-weight:500;color:rgba(255,255,255,.75);margin-top:.8mm}}
 /* inner pages */
 .plan,.tips{{padding:16mm 16mm 12mm;display:flex;flex-direction:column}}
 .ph{{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:4mm;border-bottom:1.5px solid var(--green)}}
