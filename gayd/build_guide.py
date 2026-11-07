@@ -72,8 +72,6 @@ def page_cover():
       <div class="daybig">{DAY}-kun</div>
     </div>
     <div class="cover-meta">
-      <div><span>Mijoz</span><i></i></div>
-      <div><span>Sana</span><i></i></div>
       <div><span>Kunlik me’yor</span><b>≈ {TOT['kcal']:,} kkal</b></div>
     </div>
   </div>
@@ -165,7 +163,7 @@ body{{font-family:Body,sans-serif;color:var(--ink);background:var(--paper);-webk
 .kicker{{font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:10pt;color:#f3d79c}}
 h1{{font-family:Disp;font-weight:800;font-size:54pt;line-height:.98;margin-top:4mm;letter-spacing:-.01em}}
 .daybig{{display:inline-block;margin-top:6mm;font-family:Disp;font-weight:600;font-size:22pt;padding:2mm 7mm;border:1.5px solid rgba(255,255,255,.7);border-radius:20mm}}
-.cover-meta{{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8mm;margin-top:14mm;padding-top:6mm;border-top:1px solid rgba(255,255,255,.35)}}
+.cover-meta{{display:grid;grid-template-columns:1fr;gap:8mm;margin-top:14mm;padding-top:6mm;border-top:1px solid rgba(255,255,255,.35)}}
 .cover-meta span{{display:block;font-size:8pt;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.7);font-weight:700}}
 .cover-meta i{{display:block;height:7mm;border-bottom:1px solid rgba(255,255,255,.6)}}
 .cover-meta b{{display:block;margin-top:1.5mm;font-family:Disp;font-weight:600;font-size:15pt}}
