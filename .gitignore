@@ -4,3 +4,8 @@ out/render.log
 __pycache__/
 out/AZDIF_reklama_UHD_9x16*.mp4
 out/*_s.mp4
+out/_v2*
+out/v2_*
+out/render_v2.log
+out/AZDIF_v2_UHD_9x16*.mp4
+src/v2/__pycache__/
