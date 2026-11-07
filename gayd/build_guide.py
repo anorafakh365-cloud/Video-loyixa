@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""1-kun ovqatlanish qo'llanmasi (3 sahifali A4 PDF). HTML -> Chromium PDF."""
-import base64, os
+"""Kunlik ovqatlanish qo'llanmasi (3 sahifali A4 PDF). Ishlatish: python3 build_guide.py <kun>"""
+import base64, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 FD = os.path.join(HERE, '..', 'assets', 'fonts')
 def b64(p): return base64.b64encode(open(p, 'rb').read()).decode()
@@ -23,7 +23,8 @@ MEALS = [
          items=[("Baliq, duxovkada", "150 g"), ("Grechka, pishgan", "120 g"), ("Brokkoli", "150 g")],
          note="Yengil, ammo oqsilga boy kechki ovqat — uyqudan 3 soat oldin."),
 ]
-TOT = dict(kcal=sum(m['kcal'] for m in MEALS), p=sum(m['p'] for m in MEALS), f=sum(m['f'] for m in MEALS), c=sum(m['c'] for m in MEALS))
+PLACEHOLDER_TOT = None
+_TOTLINE = dict(kcal=sum(m['kcal'] for m in MEALS), p=sum(m['p'] for m in MEALS), f=sum(m['f'] for m in MEALS), c=sum(m['c'] for m in MEALS))
 
 PREP = [
     ("Tuxum", "Qaynab turgan suvga solib, 8–9 daqiqa pishiring, so‘ng sovuq suvga oling."),
@@ -46,6 +47,18 @@ SHOP = [
     ("Don va boshqalar", ["Donli non", "Grechka — 50 g (quruq)", "Guruch — 30 g", "Yong‘oq — 15 g", "Zaytun moyi"]),
 ]
 
+DAY = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+if DAY != 1:
+    import importlib
+    _d = importlib.import_module(f'day{DAY}')
+    MEALS, PREP, SHOP = _d.MEALS, _d.PREP, _d.SHOP
+    RULES = getattr(_d, 'RULES', RULES)
+    IMG = b64(os.path.join(HERE, f'{DAY}-kun.jpg'))
+PLATE_LABEL, PLATE = 'Nonushta namunasi', ('pomidor, bodring, brokkoli, salat', 'tuxum, baliq, go‘sht, kefir', 'donli non, grechka')
+if DAY != 1:
+    PLATE_LABEL = getattr(_d, 'PLATE_LABEL', 'Taom namunasi'); PLATE = getattr(_d, 'PLATE', PLATE)
+TOT = dict(kcal=sum(m['kcal'] for m in MEALS), p=sum(m['p'] for m in MEALS), f=sum(m['f'] for m in MEALS), c=sum(m['c'] for m in MEALS))
+
 def page_cover():
     return f"""
 <section class="page cover">
@@ -56,7 +69,7 @@ def page_cover():
     <div class="cover-main">
       <div class="kicker">Sog‘lom vazn va energiya uchun</div>
       <h1>Ovqatlanish<br>rejasi</h1>
-      <div class="daybig">1-kun</div>
+      <div class="daybig">{DAY}-kun</div>
     </div>
     <div class="cover-meta">
       <div><span>Mijoz</span><i></i></div>
@@ -87,7 +100,7 @@ def page_plan():
 </div>"""
     return f"""
 <section class="page plan">
-  <header class="ph"><div><div class="eyebrow">1-kun · Kunlik menyu</div><h2>Bugungi ovqatlanish</h2></div><div class="pn">02</div></header>
+  <header class="ph"><div><div class="eyebrow">{DAY}-kun · Kunlik menyu</div><h2>Bugungi ovqatlanish</h2></div><div class="pn">02</div></header>
   <div class="totals">
     <div class="tot"><b>{TOT['kcal']}</b><span>kkal</span></div>
     <div class="tot"><b>{TOT['p']} g</b><span>oqsil</span></div>
@@ -97,12 +110,12 @@ def page_plan():
   </div>
   <div class="timeline">{rows}</div>
   <div class="plate">
-    <div class="pimg" style="background-image:url(data:image/jpeg;base64,{IMG})"><span>Nonushta namunasi</span></div>
+    <div class="pimg" style="background-image:url(data:image/jpeg;base64,{IMG})"><span>{PLATE_LABEL}</span></div>
     <div class="ptxt">
       <h5 class="sec">Likopcha qoidasi</h5>
-      <div class="prow"><b class="pc1"></b><div><strong>½ — sabzavot va ko‘kat</strong><span>pomidor, bodring, brokkoli, salat</span></div></div>
-      <div class="prow"><b class="pc2"></b><div><strong>¼ — oqsil</strong><span>tuxum, baliq, go‘sht, kefir</span></div></div>
-      <div class="prow"><b class="pc3"></b><div><strong>¼ — murakkab uglevod</strong><span>donli non, grechka</span></div></div>
+      <div class="prow"><b class="pc1"></b><div><strong>½ — sabzavot va ko‘kat</strong><span>{PLATE[0]}</span></div></div>
+      <div class="prow"><b class="pc2"></b><div><strong>¼ — oqsil</strong><span>{PLATE[1]}</span></div></div>
+      <div class="prow"><b class="pc3"></b><div><strong>¼ — murakkab uglevod</strong><span>{PLATE[2]}</span></div></div>
     </div>
   </div>
   <div class="disc">Kaloriya va makronutrientlar taxminiy, porsiya hajmi va mahsulotga qarab farq qiladi. O — oqsil, Y — yog‘, U — uglevod.</div>
@@ -115,7 +128,7 @@ def page_tips():
     water = "".join("<i></i>" for _ in range(8))
     return f"""
 <section class="page tips">
-  <header class="ph"><div><div class="eyebrow">1-kun · Amaliy tavsiyalar</div><h2>Tayyorlash va qoidalar</h2></div><div class="pn">03</div></header>
+  <header class="ph"><div><div class="eyebrow">{DAY}-kun · Amaliy tavsiyalar</div><h2>Tayyorlash va qoidalar</h2></div><div class="pn">03</div></header>
   <div class="grid2">
     <div>
       <h5 class="sec">Qanday tayyorlash kerak</h5>
@@ -127,7 +140,7 @@ def page_tips():
       <div class="water"><h5 class="sec">Suv nazorati <small>har bir stakan — 250 ml</small></h5><div class="cups">{water}</div></div>
     </div>
   </div>
-  <div class="shop"><h5 class="sec">Xarid ro‘yxati — 1-kun</h5><div class="shopgrid">{shop}</div></div>
+  <div class="shop"><h5 class="sec">Xarid ro‘yxati — {DAY}-kun</h5><div class="shopgrid">{shop}</div></div>
   <div class="sign"><div>Dastur shaxsiy maqsad va sog‘liq holatiga moslashtiriladi. Surunkali kasallik, homiladorlik yoki allergiya bo‘lsa, shifokor bilan maslahatlashing.</div></div>
 </section>"""
 
@@ -213,5 +226,5 @@ li em{{font-style:normal;font-weight:700;color:var(--green);white-space:nowrap}}
 """
 
 html = f"<!doctype html><html><head><meta charset='utf-8'><style>{CSS}</style></head><body>{page_cover()}{page_plan()}{page_tips()}</body></html>"
-open(os.path.join(HERE, '1-kun_qollanma.html'), 'w').write(html)
+open(os.path.join(HERE, f'{DAY}-kun_qollanma.html'), 'w').write(html)
 print('html tayyor')
