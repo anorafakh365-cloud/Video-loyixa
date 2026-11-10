@@ -1,6 +1,6 @@
 # TEZORA — gilam yuvish reklamasi
 
-Vertikal **9:16, 1080×1920**, 30 fps, 31 soniya. Instagram Reels / TikTok / YouTube Shorts / Telegram uchun (−14 LUFS).
+Vertikal **9:16, Ultra HD 2160×3840 (4K)**, 30 fps, 31 soniya. Instagram Reels / TikTok / YouTube Shorts / Telegram uchun (−14 LUFS).
 Tayyor fayl: `out/TEZORA_reklama_9x16.mp4`
 
 Pastki panelda (butun video davomida): **66-200-17-00 · Samarqand**.
