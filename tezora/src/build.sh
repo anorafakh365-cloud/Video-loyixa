@@ -9,5 +9,6 @@ ffmpeg -y -loglevel error -i assets/voice.mp3 -i out/_music.wav -filter_complex 
   [m][vk]sidechaincompress=threshold=0.03:ratio=6:attack=20:release=300[md];
   [vm][md]amix=inputs=2:normalize=0:duration=longest,apad,atrim=0:31,loudnorm=I=-14:TP=-1.5:LRA=9,aresample=48000" \
   -c:a pcm_s16le out/_mix.wav
-ffmpeg -y -loglevel error -i out/_video.mp4 -i out/_mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 256k -movflags +faststart -t 31 out/TEZORA_reklama_9x16.mp4
+ffmpeg -y -loglevel error -i out/_video.mp4 -i out/_mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 256k -movflags +faststart -t 31 out/_master.mp4
+ffmpeg -y -loglevel error -i out/_master.mp4 -c:v libx264 -preset slow -crf 19 -maxrate 12M -bufsize 24M -profile:v high -pix_fmt yuv420p -c:a copy -movflags +faststart out/TEZORA_reklama_9x16.mp4
 ls -la out/TEZORA_reklama_9x16.mp4
