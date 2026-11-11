@@ -37,7 +37,7 @@ def saw(f, t, det=0.0):
 
 BPM = 120; beat = 60 / BPM; bar = 4 * beat
 ANCHOR = 12.66 - 6 * bar     # 2-qism (12.66 s) bar boshiga tushadi          # zarbli qism 7.27 da boshlanadi, yakuniy kadr ham bar boshiga tushadi
-DRUMS = 5.76; END = 26.66 - 2 * bar + 0.0
+DRUMS = 5.76; END = 28.66 - 2 * bar   # final akkord 28.66 da
 CH = [(48, [60, 64, 67, 72]), (43, [59, 62, 67, 71]), (45, [60, 64, 69, 72]), (41, [60, 65, 69, 72])]  # C G Am F
 
 b = 0
